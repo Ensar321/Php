@@ -5,83 +5,64 @@
 	<title>Document</title>
 
 	<style>
-		
-		table
-		{
+		table {
 			border: 1px solid black;
 		}
-
-		tr,td,th
-		{
+		tr, td, th {
 			border: 1px solid black;
-			
 		}
-		table,tr,td
-		{
+		table, tr, td {
 			border-collapse: collapse;
 		}
-		td
-		{
+		td {
 			padding: 10px;
 		}
-
 	</style>
 </head>
 <body>
 
+<?php 
+	include_once('config.php'); // Ensure the connection is correctly set up
 
-	<?php 
+	// Fetch all records from the 'challenge' table
+	$getusers = $conn->prepare("SELECT * FROM challenge");
+	$getusers->execute();
 
-		include_once('config.php');
+	// Fetch the results into an associative array
+	$users = $getusers->fetchAll(PDO::FETCH_ASSOC);
+?>
 
-		$getUsers = $conn->prepare("SELECT * FROM users");
+<a href="index.php">Add User</a>
 
-		$getUsers->execute();
+<table>
+<thead>
+	<tr>
+		<th>ID</th>
+		<th>Title</th>
+		<th>Description</th>
+		<th>Quantity</th>
+		<th>Prices</th>
+	</tr>
+</thead>
 
-		$users = $getUsers->fetchAll();
+<tbody>
 
-	 ?>
+<?php foreach ($users as $products): ?>
+	<tr>
+		<td><?= $products['id'] ?></td>
+		<td><?= $products['title'] ?></td>
+		<td><?= $products['description'] ?></td>
+		<td><?= $products['quantity'] ?></td>
+		<td><?= $products['prices'] ?></td>
+		<td>
+			<a href="delete.php?id=<?= $products['id'] ?>">Delete</a> |
+			<a href="edit.php?id=<?= $products['id'] ?>">Update</a>
+		</td>
+	</tr>
+<?php endforeach; ?>
 
+</tbody>
+</table>
 
-	 <table>
-		<thead>
-			
-			<tr>
-				<th>ID</th>
-				<th>Username</th>
-				<th>Name</th>
-				<th>Surname</th>
-				<th>Email</th>
-				<th>Update</th>
-			</tr>
-	</thead>
-
-
-	 	<?php 
-
-	 		foreach ($users as $user ) {
-			
-		?>
-			<tr> 
-				<td> <?= $user['id'] ?> </td>
-				<td> <?= $user['username'] ?> </td>
-				<td> <?= $user['name']  ?> </td> 
-				<td> <?= $user['surname']  ?> </td> 
-				<td> <?= $user['email']  ?> </td>
-				<td> <?= "<a href='delete.php?id=$user[id]'> Delete</a>| <a href='edit.php?id=$user[id]'> Update </a>"?></td>
-
-			</tr>
-		
-		<?php 
-
-			}
-
-	 	 ?>
-
-
-	 </table>
-
-	 <a href="index.php">Add User</a>
-	
 </body>
 </html>
